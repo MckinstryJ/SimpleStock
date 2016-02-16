@@ -17,6 +17,7 @@ namespace SimpleStockAnalyze
     {
         private Companies comp = new Companies();
         private NasdaqList tix = new NasdaqList();
+        public string selected;
 
         private List<NasdaqList> nasdaqDisplayList = new List<NasdaqList>();
         BindingSource nasDAQBinding = new BindingSource();
@@ -63,9 +64,11 @@ namespace SimpleStockAnalyze
         /// </summary>
         private void searchBox_TextChanged(object sender, EventArgs e)
         {
-
-            //searchBox.Text;
-            
+            //Search box finally works! To search through the list of "y's" just keep pressing y to look through the list for all y's
+            //TODO: auotcomplete list that updates with every change in user input
+            int indexOfSelected = companyList.FindString(searchBox.Text);
+            if (indexOfSelected != -1)
+                companyList.SetSelected(indexOfSelected, true);
         }
 
         //When the Ticker name is selected and the view button is pressed...
@@ -73,7 +76,7 @@ namespace SimpleStockAnalyze
         {
             WebClient wc = new WebClient();
 
-            string selected = companyList.GetItemText(companyList.SelectedItem);
+            selected = companyList.GetItemText(companyList.SelectedItem);
 
             //Display the tix name
             Stream stream = wc.OpenRead("http://download.finance.yahoo.com/d/quotes.csv?s=" + selected + "&f=n");
@@ -89,6 +92,14 @@ namespace SimpleStockAnalyze
             {
                 String lastTrade = name.ReadToEnd().Replace(@"""", "");
                 LastTradeValue.Text = string.Format("${0}", lastTrade);
+            }
+
+            //50d MA average:
+            stream = wc.OpenRead("http://download.finance.yahoo.com/d/quotes.csv?s=" + selected + "&f=m3");
+            using (StreamReader name = new StreamReader(stream))
+            {
+                String twoHundredMA = name.ReadToEnd().Replace(@"""", "");
+                Last50MA.Text = string.Format("${0}", twoHundredMA);
             }
 
             //200d MA average: 
