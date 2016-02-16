@@ -8,6 +8,6 @@ Major parts of the appliction:
 -Once the Analyze button is pressed, the application retrieves the data from Google finance/ Yahoo finance and displays it.
 
 Needed changes:
--Add the needed code for the search bar to work correctly
+-Add a autocomplete function to the search
 -Add more financial information.
 -Add a custom calculation that clumps the displayed into one possible value
